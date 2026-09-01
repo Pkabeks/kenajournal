@@ -303,7 +303,7 @@
               <div>
                 <div id="txtActivePhaseTitle" class="text-[10px] uppercase font-bold text-emerald-400 tracking-wider">Active Challenge Phase</div>
                 <div class="text-xs font-bold text-slate-100 flex items-center gap-1">
-                  <span id="txtActiveWeekLabel">Week 3 Active</span>
+                  <span id="txtActiveWeekLabel">Week 1 Active</span>
                   <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
                 </div>
               </div>
@@ -342,8 +342,8 @@
         </div>
       </div>
 
-      <!-- Quick Summary Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Quick Summary Cards (Admin Only) -->
+      <div id="summaryCardsGrid" class="hidden grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-sm">
           <div id="txtTotalTradesCard" class="text-xs text-slate-400">Total Challenge Trades</div>
           <div id="statTotalTrades" class="text-2xl font-bold text-white mt-1">0</div>
@@ -366,7 +366,7 @@
         </div>
       </div>
 
-      <!-- Admin Full Growth Report Section (Visible only to Admin with Print Report option) -->
+      <!-- Admin Full Growth Report Section -->
       <div id="adminFullReportSection" class="hidden bg-slate-900 border border-ken-blue/40 rounded-2xl p-5 shadow-lg space-y-4">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
           <div class="flex items-center gap-2">
@@ -382,28 +382,6 @@
           </div>
         </div>
         <div id="adminGrowthReportContent" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-          <!-- Populated via JS -->
-        </div>
-      </div>
-
-      <!-- Admin & Trader Chart Analysis / Trade Ideas Section -->
-      <div class="bg-slate-900 rounded-2xl border border-slate-800 p-5 shadow-md space-y-4">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
-          <div>
-            <h3 id="txtAnalysisSectionTitle" class="text-sm font-bold text-white flex items-center gap-2">
-              <i data-lucide="line-chart" class="w-4 h-4 text-google-yellow"></i>
-              Weekly Chart Analysis & Daily Trade Ideas
-            </h3>
-            <p id="txtAnalysisSectionSub" class="text-xs text-slate-400">Admin shared analysis & setups. Share ideas and like setups.</p>
-          </div>
-          <button id="btnAddAnalysisBtn" onclick="openAdminAnalysisModal()" class="hidden px-3 py-2 bg-ken-blue hover:bg-sky-700 text-white rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shrink-0">
-            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-            <span id="txtUploadAnalysisBtn">Upload Chart Analysis</span>
-          </button>
-        </div>
-
-        <!-- Analysis Feed -->
-        <div id="analysisFeedGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <!-- Populated via JS -->
         </div>
       </div>
@@ -424,7 +402,7 @@
           </div>
         </div>
 
-        <!-- Distribution Pie Chart (Hidden for regular users, visible for admin) -->
+        <!-- Distribution Pie Chart -->
         <div id="tradeVolumeCard" class="bg-slate-900 rounded-2xl p-5 border border-slate-800 shadow-md">
           <div class="flex items-center justify-between mb-4">
             <h3 id="txtTradeBreakdownTitle" class="text-sm font-semibold text-slate-200 flex items-center gap-2">
@@ -451,7 +429,7 @@
         </div>
       </div>
 
-      <!-- Overview Leaderboard with Candlesticks & Top 3 Trophies (Hidden for regular users, visible for admin) -->
+      <!-- Overview Leaderboard -->
       <div id="leaderboardSection" class="bg-slate-900 rounded-2xl border border-slate-800 shadow-md overflow-hidden">
         <div class="p-4 border-b border-slate-800 flex items-center justify-between flex-wrap gap-2">
           <h3 id="txtRankingsTitle" class="text-sm font-bold text-slate-200 flex items-center gap-2">
@@ -524,7 +502,7 @@
         </div>
       </div>
 
-      <!-- The Google Sheet Table Grid with Comments Column -->
+      <!-- The Google Sheet Table Grid -->
       <div class="bg-slate-900 rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
         <div class="overflow-x-auto">
           <table class="w-full text-xs text-left border-collapse min-w-[850px]">
@@ -634,36 +612,6 @@
 
   </main>
 
-  <!-- ADMIN UPLOAD ANALYSIS MODAL -->
-  <div id="adminAnalysisModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4">
-      <button onclick="closeAdminAnalysisModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition">
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
-
-      <h3 class="text-base font-bold text-white">Upload Weekly Chart Analysis & Trade Ideas</h3>
-
-      <form onsubmit="handleAdminUploadAnalysis(event)" class="space-y-3">
-        <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1">Title / Setup Name</label>
-          <input type="text" id="analysisTitle" required placeholder="e.g. EUR/USD London Breakout Setup" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-ken-blue" />
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1">Image URL (Chart Screenshot)</label>
-          <input type="url" id="analysisImgUrl" required placeholder="https://images.unsplash.com/photo-..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 font-mono focus:outline-none focus:border-ken-blue" />
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1">Analysis & Entry Ideas Details</label>
-          <textarea id="analysisDesc" rows="3" required placeholder="Watch key resistance at 1.0920..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-ken-blue"></textarea>
-        </div>
-        <div class="pt-2 flex justify-end gap-2">
-          <button type="button" onclick="closeAdminAnalysisModal()" class="px-3 py-2 bg-slate-800 text-xs font-semibold text-slate-300 rounded-xl">Cancel</button>
-          <button type="submit" class="px-4 py-2 bg-ken-blue text-xs font-semibold text-white rounded-xl shadow-md">Publish Analysis</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
   <!-- FOREX FACTORY NEWS DETAIL MODAL -->
   <div id="newsDetailModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4">
@@ -674,18 +622,18 @@
       <div class="flex items-center gap-2 flex-wrap">
         <span id="modalVolatilityTag" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">HIGH IMPACT</span>
         <span id="modalCurrencyTag" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-ken-blue/30 text-sky-300 border border-ken-blue/50">USD</span>
-        <span id="modalStatusTag" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">ANNOUNCED</span>
+        <span id="modalStatusTag" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">UPCOMING</span>
       </div>
 
       <div>
         <h3 id="modalNewsTitle" class="text-lg font-bold text-white">US Core CPI Inflation Report</h3>
-        <p id="modalNewsTime" class="text-xs text-slate-400 mt-0.5">Today at 13:30 GMT</p>
+        <p id="modalNewsTime" class="text-xs text-slate-400 mt-0.5">Sep 11, 2026 • 12:30 GMT</p>
       </div>
 
       <div id="modalDataGrid" class="bg-slate-950/80 rounded-xl p-4 border border-slate-800 grid grid-cols-3 gap-2 text-center">
         <div>
           <div id="modalLabelActual" class="text-[10px] uppercase font-semibold text-slate-400">Actual</div>
-          <div id="modalValActual" class="text-base font-bold text-white font-mono mt-0.5">3.4%</div>
+          <div id="modalValActual" class="text-base font-bold text-white font-mono mt-0.5">Pending</div>
         </div>
         <div>
           <div id="modalLabelForecast" class="text-[10px] uppercase font-semibold text-slate-400">Forecast</div>
@@ -700,15 +648,15 @@
       <div id="modalImpactBox" class="rounded-xl p-3.5 border flex items-center justify-between">
         <div>
           <span id="modalLabelSentiment" class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Market Outcome</span>
-          <div id="modalImpactBadge" class="text-sm font-extrabold flex items-center gap-1.5 mt-0.5 text-emerald-400">
-            <i data-lucide="trending-up" class="w-4 h-4"></i>
-            <span>BULLISH / POSITIVE FOR USD</span>
+          <div id="modalImpactBadge" class="text-sm font-extrabold flex items-center gap-1.5 mt-0.5 text-slate-400">
+            <i data-lucide="clock" class="w-4 h-4"></i>
+            <span>UPCOMING EVENT (NO SIGNAL YET)</span>
           </div>
         </div>
       </div>
 
       <p id="modalImpactSummary" class="text-xs text-slate-300 leading-relaxed bg-slate-950/40 p-3 rounded-lg border border-slate-800/80">
-        Actual inflation printed significantly above market expectations, boosting rate hike sentiment and triggering immediate dollar buying.
+        Scheduled economic release. High volatility is expected across major currency pairs upon release.
       </p>
 
       <div class="pt-2 flex justify-between items-center flex-wrap gap-2">
@@ -740,84 +688,85 @@
     const DEFAULT_USERS = ["Dan", "Desty", "Fabrice", "Joseph", "Josue", "Tabala", "Pascal", "Pat"];
     const FIXED_RISK_PRESETS = [3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 60, 65, 70, 80];
 
+    // Updated with active September 2026 economic events
     const FOREX_NEWS_ITEMS = [
       {
         id: "ff-1",
         pair: "USD",
-        title: "Core CPI Inflation Rate (MoM/YoY)",
-        time: "Sep 11 • 12:30 GMT",
+        title: "US ISM Manufacturing PMI",
+        time: "Sep 01, 2026 • 14:00 GMT",
         impact: "HIGH",
-        isAnnounced: true,
-        actual: "3.4%",
-        forecast: "3.1%",
-        previous: "2.9%",
-        sentiment: "BULLISH",
-        summary: "Actual inflation printed significantly above expectations (3.4% vs 3.1%). Yields surged driving immediate bullish demand for USD."
+        isAnnounced: false,
+        actual: "Pending",
+        forecast: "47.8",
+        previous: "46.8",
+        sentiment: "NONE",
+        summary: "Upcoming ISM Manufacturing release. Key gauge for US industrial sector momentum and economic sentiment."
       },
       {
         id: "ff-2",
         pair: "USD",
-        title: "Non-Farm Employment Change & Unemployment",
-        time: "Sep 18 • 12:30 GMT",
+        title: "ADP Non-Farm Employment Change",
+        time: "Sep 03, 2026 • 12:15 GMT",
         impact: "HIGH",
-        isAnnounced: true,
-        actual: "225K",
-        forecast: "170K",
-        previous: "155K",
-        sentiment: "BULLISH",
-        summary: "NFP jobs growth exceeded forecast at 225K. Positive labor market dynamics supported USD strength across majors."
+        isAnnounced: false,
+        actual: "Pending",
+        forecast: "145K",
+        previous: "122K",
+        sentiment: "NONE",
+        summary: "Private sector employment indicator ahead of the Friday official NFP report."
       },
       {
         id: "ff-3",
         pair: "USD",
-        title: "FOMC Federal Funds Rate & Economic Projections",
-        time: "Sep 23 • 18:00 GMT",
+        title: "Non-Farm Employment Change (NFP) & Unemployment",
+        time: "Sep 04, 2026 • 12:30 GMT",
         impact: "HIGH",
-        isAnnounced: true,
-        actual: "5.25%",
-        forecast: "5.25%",
-        previous: "5.00%",
-        sentiment: "BEARISH",
-        summary: "Fed kept rates unchanged but dovish comments regarding future rate cuts triggered profit taking on USD positions."
+        isAnnounced: false,
+        actual: "Pending",
+        forecast: "165K",
+        previous: "114K",
+        sentiment: "NONE",
+        summary: "Major monthly US employment benchmark report. Expect high volatility across all USD majors."
       },
       {
         id: "ff-4",
         pair: "EUR",
-        title: "ECB Press Conference & Main Refinancing Rate",
-        time: "Sep 25 • 12:15 GMT",
-        impact: "MEDIUM",
-        isAnnounced: true,
-        actual: "4.25%",
-        forecast: "4.25%",
-        previous: "4.25%",
-        sentiment: "BULLISH",
-        summary: "ECB reaffirmed tight monetary policy stance to curb sticky core inflation, offering mild bullish momentum for Euro."
-      },
-      {
-        id: "ff-5",
-        pair: "GBP",
-        title: "UK Official Bank Rate & Monetary Policy Summary",
-        time: "Sep 28 • 11:00 GMT",
+        title: "ECB Main Refinancing Rate & Monetary Policy Statement",
+        time: "Sep 10, 2026 • 12:15 GMT",
         impact: "HIGH",
         isAnnounced: false,
         actual: "Pending",
-        forecast: "5.00%",
-        previous: "5.25%",
+        forecast: "3.75%",
+        previous: "4.25%",
         sentiment: "NONE",
-        summary: "Major interest rate decision pending for Pound Sterling. High volatility expected across GBP/USD and EUR/GBP."
+        summary: "European Central Bank interest rate decision and economic projections."
+      },
+      {
+        id: "ff-5",
+        pair: "USD",
+        title: "Core CPI Inflation Rate (MoM/YoY)",
+        time: "Sep 11, 2026 • 12:30 GMT",
+        impact: "HIGH",
+        isAnnounced: false,
+        actual: "Pending",
+        forecast: "3.1%",
+        previous: "2.9%",
+        sentiment: "NONE",
+        summary: "Crucial consumer price index reading prior to the mid-September FOMC policy meeting."
       },
       {
         id: "ff-6",
-        pair: "XAU",
-        title: "Geopolitical Safe Haven Demand & Central Bank Reserves",
-        time: "Sep 29 • Important Interest",
-        impact: "INTEREST",
-        isAnnounced: true,
-        actual: "Record Highs",
-        forecast: "N/A",
-        previous: "N/A",
-        sentiment: "BULLISH",
-        summary: "Continued central bank gold accumulation supports long-term bullish bias on Gold (XAU/USD)."
+        pair: "USD",
+        title: "FOMC Federal Funds Rate & Economic Projections",
+        time: "Sep 16, 2026 • 18:00 GMT",
+        impact: "HIGH",
+        isAnnounced: false,
+        actual: "Pending",
+        forecast: "5.25%",
+        previous: "5.50%",
+        sentiment: "NONE",
+        summary: "Federal Reserve monetary policy stance, rate decision and Chairman press conference."
       }
     ];
 
@@ -886,9 +835,6 @@
         bearishText: "BEARISH / NEGATIVE FOR",
         upcomingText: "UPCOMING EVENT (NO SIGNAL YET)",
         adminReportTitle: "Admin Growth Report (Week / Month Analysis)",
-        analysisSectionTitle: "Weekly Chart Analysis & Daily Trade Ideas",
-        analysisSectionSub: "Admin shared analysis & setups. Share ideas and like setups.",
-        uploadAnalysisBtn: "Upload Chart Analysis",
         printPDF: "Print Weekly PDF",
         printAdminReport: "Print Full Report",
         quotes: [
@@ -963,9 +909,6 @@
         bearishText: "BAISSIER / NÉGATIF POUR",
         upcomingText: "ÉVÉNEMENT À VENIR (AUCUN SIGNAL)",
         adminReportTitle: "Rapport de Croissance Admin (Semaine / Mois)",
-        analysisSectionTitle: "Analyse Graphique Hebdomadaire & Idées de Trade",
-        analysisSectionSub: "Analyses et configurations partagées par l'admin.",
-        uploadAnalysisBtn: "Publier une Analyse",
         printPDF: "Imprimer PDF Hebdo",
         printAdminReport: "Imprimer Rapport Complet",
         quotes: [
@@ -982,7 +925,7 @@
       lang: "EN",
       users: [],
       userPins: {},
-      currentUser: null,
+      currentUser: null, // Default set to null (no user logged in by default)
       isAdminAuthenticated: false,
       selectedMonth: "2026-09",
       sheets: {},
@@ -992,6 +935,7 @@
     let lineChartInst = null;
     let barChartInst = null;
     let pieChartInst = null;
+    let currentQuoteIdx = 0;
 
     function getCalculatedActiveWeek() {
       const today = new Date();
@@ -1055,10 +999,18 @@
       rotateQuotes();
       applyLanguageUI();
       syncActiveWeekDisplay();
-      renderAnalysisFeed();
       setInterval(rotateQuotes, 12000);
       switchTab('dashboard');
     });
+
+    function rotateQuotes() {
+      const dict = I18N[state.lang] || I18N.EN;
+      const display = document.getElementById('quoteDisplay');
+      if (display && dict.quotes && dict.quotes.length > 0) {
+        display.textContent = `"${dict.quotes[currentQuoteIdx % dict.quotes.length]}"`;
+        currentQuoteIdx++;
+      }
+    }
 
     function syncActiveWeekDisplay() {
       const dict = I18N[state.lang] || I18N.EN;
@@ -1086,25 +1038,11 @@
     function initDefaultState() {
       state.lang = "EN";
       state.users = [...DEFAULT_USERS];
-      state.currentUser = "Dan";
+      state.currentUser = null; // Default to no logged in user
       state.isAdminAuthenticated = false;
       state.selectedMonth = "2026-09";
       state.userPins = {};
       state.sheets = {};
-      state.chartAnalysis = [
-        {
-          id: "analysis-1",
-          title: "EUR/USD Daily Structure & Order Block Setup",
-          imgUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&auto=format&fit=crop",
-          desc: "Admin Daily Trade Idea: Price is sweeping liquidity above 1.0950. Look for bearish rejection into London session open.",
-          author: "Admin KEN",
-          likes: ["Dan", "Desty"],
-          comments: [
-            { author: "Dan", text: "Aligned with my bias, shorting the retest!" },
-            { author: "Fabrice", text: "Great setup admin, keeping risk tight." }
-          ]
-        }
-      ];
 
       state.users.forEach((user) => {
         state.userPins[user] = "1234";
@@ -1217,9 +1155,6 @@
       document.getElementById('txtBizDaysBadge').textContent = dict.bizDaysBadge;
       document.getElementById('newsVolatilityBadge').textContent = dict.highVolatilityBadge;
       document.getElementById('txtAdminReportTitle').textContent = dict.adminReportTitle;
-      document.getElementById('txtAnalysisSectionTitle').innerHTML = `<i data-lucide="line-chart" class="w-4 h-4 text-google-yellow"></i> ${dict.analysisSectionTitle}`;
-      document.getElementById('txtAnalysisSectionSub').textContent = dict.analysisSectionSub;
-      document.getElementById('txtUploadAnalysisBtn').textContent = dict.uploadAnalysisBtn;
 
       document.getElementById('modalLabelActual').textContent = dict.modalActual;
       document.getElementById('modalLabelForecast').textContent = dict.modalForecast;
@@ -1240,7 +1175,6 @@
       document.getElementById('thNetProfit').textContent = dict.thNetProfit;
 
       renderNewsFeed();
-      renderAnalysisFeed();
       lucide.createIcons();
     }
 
@@ -1342,18 +1276,30 @@
       const select = document.getElementById('loginUserSelect');
       if (!select) return;
       select.innerHTML = '';
+
+      const defaultOption = document.createElement('option');
+      defaultOption.value = "";
+      defaultOption.disabled = true;
+      defaultOption.selected = !state.currentUser;
+      defaultOption.textContent = "Select your name...";
+      select.appendChild(defaultOption);
+
       state.users.forEach(user => {
         const opt = document.createElement('option');
         opt.value = user;
         opt.textContent = user;
+        if (state.currentUser === user) opt.selected = true;
         select.appendChild(opt);
       });
-      if (state.currentUser) select.value = state.currentUser;
     }
 
     function handleUserLogin(e) {
       e.preventDefault();
       const selected = document.getElementById('loginUserSelect').value;
+      if (!selected) {
+        alert("Please select your participant name.");
+        return;
+      }
       const enteredPin = document.getElementById('loginPin').value.trim();
       const expectedPin = (state.userPins && state.userPins[selected]) || "1234";
 
@@ -1706,12 +1652,18 @@
         });
       });
 
+      const summaryCardsGrid = document.getElementById('summaryCardsGrid');
       const reportSection = document.getElementById('adminFullReportSection');
       const reportContent = document.getElementById('adminGrowthReportContent');
       const tradeVolumeCard = document.getElementById('tradeVolumeCard');
       const leaderboardSection = document.getElementById('leaderboardSection');
 
+      // Admin-only visibility for summary cards, full growth report, trade volume breakdown, and rankings
       if (state.isAdminAuthenticated) {
+        if (summaryCardsGrid) {
+          summaryCardsGrid.classList.remove('hidden');
+          summaryCardsGrid.classList.add('grid');
+        }
         if (reportSection) reportSection.classList.remove('hidden');
         if (tradeVolumeCard) tradeVolumeCard.classList.remove('hidden');
         if (leaderboardSection) leaderboardSection.classList.remove('hidden');
@@ -1736,7 +1688,10 @@
           });
         }
       } else {
-        // Hide Trade Volume Breakdown & Rankings Leaderboard for regular users
+        if (summaryCardsGrid) {
+          summaryCardsGrid.classList.add('hidden');
+          summaryCardsGrid.classList.remove('grid');
+        }
         if (reportSection) reportSection.classList.add('hidden');
         if (tradeVolumeCard) tradeVolumeCard.classList.add('hidden');
         if (leaderboardSection) leaderboardSection.classList.add('hidden');
@@ -1863,7 +1818,6 @@
         }
       });
 
-      // Pie chart is only rendered if admin is logged in and the canvas exists
       const pieEl = document.getElementById('pieChart');
       if (pieEl && state.isAdminAuthenticated) {
         const pieData = userStats.map(u => u.executed);
@@ -1889,6 +1843,68 @@
       }
     }
 
+    function renderNewsFeed() {
+      const container = document.getElementById('newsFeed');
+      if (!container) return;
+      container.innerHTML = '';
+
+      FOREX_NEWS_ITEMS.forEach(item => {
+        const div = document.createElement('div');
+        div.className = "p-2 bg-slate-950/80 rounded-xl border border-slate-800 hover:border-slate-700 transition cursor-pointer flex items-center justify-between gap-2";
+        div.onclick = () => openNewsModal(item);
+
+        const sentimentColor = item.sentiment === 'BULLISH' ? 'text-emerald-400' : (item.sentiment === 'BEARISH' ? 'text-rose-400' : 'text-slate-400');
+
+        div.innerHTML = `
+          <div class="overflow-hidden">
+            <div class="flex items-center gap-1.5 font-bold text-[11px] text-white">
+              <span class="px-1.5 py-0.2 rounded bg-ken-blue/30 text-sky-300 font-mono text-[9px]">${item.pair}</span>
+              <span class="truncate">${item.title}</span>
+            </div>
+            <div class="text-[10px] text-slate-400 mt-0.5 flex items-center gap-2">
+              <span>${item.time}</span>
+              <span class="${sentimentColor} font-semibold">${item.actual}</span>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 shrink-0"></i>
+        `;
+        container.appendChild(div);
+      });
+      lucide.createIcons();
+    }
+
+    function openNewsModal(item) {
+      const modal = document.getElementById('newsDetailModal');
+      const dict = I18N[state.lang] || I18N.EN;
+
+      document.getElementById('modalCurrencyTag').textContent = item.pair;
+      document.getElementById('modalNewsTitle').textContent = item.title;
+      document.getElementById('modalNewsTime').textContent = item.time;
+      document.getElementById('modalValActual').textContent = item.actual;
+      document.getElementById('modalValForecast').textContent = item.forecast;
+      document.getElementById('modalValPrevious').textContent = item.previous;
+      document.getElementById('modalImpactSummary').textContent = item.summary;
+
+      const badge = document.getElementById('modalImpactBadge');
+      if (item.sentiment === 'BULLISH') {
+        badge.className = "text-sm font-extrabold flex items-center gap-1.5 mt-0.5 text-emerald-400";
+        badge.innerHTML = `<i data-lucide="trending-up" class="w-4 h-4"></i> <span>${dict.bullishText} ${item.pair}</span>`;
+      } else if (item.sentiment === 'BEARISH') {
+        badge.className = "text-sm font-extrabold flex items-center gap-1.5 mt-0.5 text-rose-400";
+        badge.innerHTML = `<i data-lucide="trending-down" class="w-4 h-4"></i> <span>${dict.bearishText} ${item.pair}</span>`;
+      } else {
+        badge.className = "text-sm font-extrabold flex items-center gap-1.5 mt-0.5 text-slate-400";
+        badge.innerHTML = `<i data-lucide="clock" class="w-4 h-4"></i> <span>${dict.upcomingText}</span>`;
+      }
+
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeNewsModal() {
+      document.getElementById('newsDetailModal').classList.add('hidden');
+    }
+
     function handleAdminAuth(e) {
       e.preventDefault();
       const pin = document.getElementById('adminPassInput').value;
@@ -1896,6 +1912,7 @@
         state.isAdminAuthenticated = true;
         saveState();
         switchTab('admin');
+        renderDashboard(); // Re-render dashboard to reveal admin stats
       } else {
         alert('Invalid admin passcode. Try "admin123".');
       }
@@ -1905,6 +1922,7 @@
       state.isAdminAuthenticated = false;
       saveState();
       switchTab('admin');
+      renderDashboard(); // Hide admin stats
     }
 
     function handleAddUser(e) {
@@ -1987,296 +2005,6 @@
         tbody.appendChild(tr);
       });
     }
-
-    function openAdminAnalysisModal() {
-      document.getElementById('adminAnalysisModal').classList.remove('hidden');
-    }
-    function closeAdminAnalysisModal() {
-      document.getElementById('adminAnalysisModal').classList.add('hidden');
-    }
-
-    function handleAdminUploadAnalysis(e) {
-      e.preventDefault();
-      const title = document.getElementById('analysisTitle').value;
-      const imgUrl = document.getElementById('analysisImgUrl').value;
-      const desc = document.getElementById('analysisDesc').value;
-
-      const newAnalysis = {
-        id: "analysis-" + Date.now(),
-        title,
-        imgUrl,
-        desc,
-        author: "Admin KEN",
-        likes: [],
-        comments: []
-      };
-
-      state.chartAnalysis.unshift(newAnalysis);
-      saveState();
-      if (window.saveCloudMetadata) {
-        window.saveCloudMetadata(state.users, state.userPins, state.chartAnalysis);
-      }
-
-      closeAdminAnalysisModal();
-      renderAnalysisFeed();
-      document.getElementById('analysisTitle').value = '';
-      document.getElementById('analysisImgUrl').value = '';
-      document.getElementById('analysisDesc').value = '';
-    }
-
-    function likeAnalysis(id) {
-      if (!state.currentUser) {
-        alert("Please log in with your participant name to like setups.");
-        return;
-      }
-      const item = state.chartAnalysis.find(a => a.id === id);
-      if (item) {
-        if (!item.likes) item.likes = [];
-        const idx = item.likes.indexOf(state.currentUser);
-        if (idx > -1) {
-          item.likes.splice(idx, 1);
-        } else {
-          item.likes.push(state.currentUser);
-        }
-        saveState();
-        if (window.saveCloudMetadata) {
-          window.saveCloudMetadata(state.users, state.userPins, state.chartAnalysis);
-        }
-        renderAnalysisFeed();
-      }
-    }
-
-    function postAnalysisComment(id) {
-      if (!state.currentUser) {
-        alert("Please log in to comment on trading ideas.");
-        return;
-      }
-      const inputEl = document.getElementById(`commentInput-${id}`);
-      const text = inputEl.value.trim();
-      if (!text) return;
-
-      const item = state.chartAnalysis.find(a => a.id === id);
-      if (item) {
-        if (!item.comments) item.comments = [];
-        
-        const existingIdx = item.comments.findIndex(c => c.author === state.currentUser);
-        if (existingIdx > -1) {
-          item.comments[existingIdx].text = text;
-        } else {
-          item.comments.push({ author: state.currentUser, text });
-        }
-
-        saveState();
-        if (window.saveCloudMetadata) {
-          window.saveCloudMetadata(state.users, state.userPins, state.chartAnalysis);
-        }
-        renderAnalysisFeed();
-        inputEl.value = '';
-      }
-    }
-
-    function renderAnalysisFeed() {
-      const grid = document.getElementById('analysisFeedGrid');
-      if (!grid) return;
-      grid.innerHTML = '';
-
-      if (state.chartAnalysis.length === 0) {
-        grid.innerHTML = `<div class="text-xs text-slate-500 italic p-4">No chart analysis uploaded yet by Admin.</div>`;
-        return;
-      }
-
-      state.chartAnalysis.forEach(item => {
-        const hasLiked = item.likes && state.currentUser && item.likes.includes(state.currentUser);
-        const likeCount = item.likes ? item.likes.length : 0;
-
-        let commentsHtml = '';
-        if (item.comments) {
-          item.comments.forEach(c => {
-            commentsHtml += `
-              <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-[11px] mb-1.5">
-                <span class="font-bold text-sky-400">${c.author}:</span> ${c.text}
-              </div>
-            `;
-          });
-        }
-
-        const card = document.createElement('div');
-        card.className = "bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden flex flex-col justify-between shadow-md";
-        card.innerHTML = `
-          <div>
-            <div class="h-40 overflow-hidden bg-slate-900 relative">
-              <img src="${item.imgUrl}" alt="Chart" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&auto=format&fit=crop'" />
-              <span class="absolute top-2 left-2 bg-slate-900/90 text-sky-400 text-[9px] font-mono px-2 py-0.5 rounded border border-slate-700">${item.author}</span>
-            </div>
-            <div class="p-4 space-y-2">
-              <h4 class="text-xs font-bold text-white">${item.title}</h4>
-              <p class="text-[11px] text-slate-300 leading-relaxed">${item.desc}</p>
-            </div>
-          </div>
-
-          <div class="p-4 pt-0 space-y-3">
-            <div class="flex items-center justify-between border-t border-slate-800/80 pt-2 text-xs">
-              <button onclick="likeAnalysis('${item.id}')" class="flex items-center gap-1.5 px-3 py-1 rounded-lg border ${hasLiked ? 'bg-rose-950/60 border-rose-800 text-rose-400' : 'bg-slate-900 border-slate-700 text-slate-300'} hover:opacity-80 transition">
-                <i data-lucide="heart" class="w-3.5 h-3.5 ${hasLiked ? 'fill-rose-400' : ''}"></i>
-                <span>${likeCount} Likes</span>
-              </button>
-            </div>
-
-            <div class="space-y-1">
-              <div class="max-h-24 overflow-y-auto pr-1">
-                ${commentsHtml || '<div class="text-[10px] text-slate-500 italic">No comments yet.</div>'}
-              </div>
-              <div class="flex gap-1.5 mt-2">
-                <input type="text" id="commentInput-${item.id}" placeholder="Share your trade idea (1 comment)..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-slate-100 focus:outline-none focus:border-ken-blue" />
-                <button onclick="postAnalysisComment('${item.id}')" class="px-3 py-1 bg-ken-blue text-white rounded-lg text-xs font-semibold hover:bg-sky-700 transition">Post</button>
-              </div>
-            </div>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-
-      lucide.createIcons();
-    }
-
-    function renderNewsFeed() {
-      const container = document.getElementById('newsFeed');
-      if (!container) return;
-      container.innerHTML = '';
-
-      let hasHighVolatility = false;
-
-      FOREX_NEWS_ITEMS.forEach(item => {
-        if (item.impact === 'HIGH') hasHighVolatility = true;
-
-        let folderBadge = `<span class="text-[9px] px-1 bg-rose-950 text-rose-400 font-bold rounded border border-rose-800">HIGH</span>`;
-        if (item.impact === 'MEDIUM') {
-          folderBadge = `<span class="text-[9px] px-1 bg-amber-950 text-amber-400 font-bold rounded border border-amber-800">MED</span>`;
-        } else if (item.impact === 'INTEREST') {
-          folderBadge = `<span class="text-[9px] px-1 bg-blue-950 text-sky-400 font-bold rounded border border-blue-800">NOTE</span>`;
-        }
-
-        let signalBadge = '';
-        if (item.isAnnounced) {
-          const isBullish = item.sentiment === 'BULLISH';
-          const badgeColor = isBullish 
-            ? 'bg-emerald-950/60 text-emerald-400 border-emerald-800/40' 
-            : 'bg-rose-950/60 text-rose-400 border-rose-800/40';
-          signalBadge = `
-            <div class="text-[9px] px-1.5 py-0.5 rounded border font-bold ${badgeColor}">
-              ${isBullish ? '▲ Bullish' : '▼ Bearish'}
-            </div>
-          `;
-        } else {
-          signalBadge = `
-            <div class="text-[9px] px-1.5 py-0.5 rounded border font-bold bg-slate-800 text-slate-400 border-slate-700">
-              ⏱ Upcoming
-            </div>
-          `;
-        }
-
-        const el = document.createElement('div');
-        el.className = "flex items-start justify-between border-b border-slate-800/60 pb-2 cursor-pointer hover:bg-slate-800/30 p-1 rounded transition";
-        el.onclick = () => openNewsModal(item);
-
-        el.innerHTML = `
-          <div class="flex-1 pr-2">
-            <div class="flex items-center gap-1.5">
-              <span class="font-bold text-[10px] text-sky-400 font-mono">${item.pair}</span>
-              ${folderBadge}
-              <span class="text-[9px] text-slate-500">${item.time}</span>
-            </div>
-            <div class="text-[11px] text-slate-200 line-clamp-1 font-medium mt-0.5">${item.title}</div>
-          </div>
-          ${signalBadge}
-        `;
-        container.appendChild(el);
-      });
-
-      const dot = document.getElementById('newsStatusDot');
-      if (dot) {
-        if (hasHighVolatility) {
-          dot.className = "h-2.5 w-2.5 rounded-full bg-rose-500 animate-ping";
-        } else {
-          dot.className = "h-2.5 w-2.5 rounded-full bg-emerald-500 animate-ping";
-        }
-      }
-    }
-
-    function openNewsModal(item) {
-      const modal = document.getElementById('newsDetailModal');
-      const dict = I18N[state.lang] || I18N.EN;
-
-      document.getElementById('modalNewsTitle').textContent = item.title;
-      document.getElementById('modalNewsTime').textContent = item.time;
-      document.getElementById('modalCurrencyTag').textContent = item.pair;
-      document.getElementById('modalValActual').textContent = item.actual;
-      document.getElementById('modalValForecast').textContent = item.forecast;
-      document.getElementById('modalValPrevious').textContent = item.previous;
-      document.getElementById('modalImpactSummary').textContent = item.summary;
-
-      const volTag = document.getElementById('modalVolatilityTag');
-      if (item.impact === 'HIGH') {
-        volTag.textContent = dict.highVolatilityBadge;
-        volTag.className = "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-rose-950 text-rose-400 border border-rose-800";
-      } else if (item.impact === 'MEDIUM') {
-        volTag.textContent = dict.medVolatilityBadge;
-        volTag.className = "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800";
-      } else {
-        volTag.textContent = "TRADER INTEREST";
-        volTag.className = "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-950 text-sky-400 border border-blue-800";
-      }
-
-      const statusTag = document.getElementById('modalStatusTag');
-      if (item.isAnnounced) {
-        statusTag.textContent = "RELEASED";
-        statusTag.className = "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800";
-      } else {
-        statusTag.textContent = "UPCOMING";
-        statusTag.className = "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700";
-      }
-
-      const box = document.getElementById('modalImpactBox');
-      const badge = document.getElementById('modalImpactBadge');
-
-      if (item.isAnnounced) {
-        box.classList.remove('hidden');
-        const isBullish = item.sentiment === 'BULLISH';
-        const currStr = item.pair.split(' ')[0];
-
-        if (isBullish) {
-          box.className = "rounded-xl p-3.5 border border-emerald-800/60 bg-emerald-950/30 flex items-center justify-between";
-          badge.className = "text-sm font-extrabold flex items-center gap-1.5 mt-0.5 text-emerald-400 font-mono";
-          badge.innerHTML = `<i data-lucide="trending-up" class="w-4 h-4"></i> ${dict.bullishText} ${currStr}`;
-        } else {
-          box.className = "rounded-xl p-3.5 border border-rose-800/60 bg-rose-950/30 flex items-center justify-between";
-          badge.className = "text-sm font-extrabold flex items-center gap-1.5 mt-0.5 text-rose-400 font-mono";
-          badge.innerHTML = `<i data-lucide="trending-down" class="w-4 h-4"></i> ${dict.bearishText} ${currStr}`;
-        }
-      } else {
-        box.className = "rounded-xl p-3.5 border border-slate-800 bg-slate-950 flex items-center justify-between";
-        badge.className = "text-xs font-bold flex items-center gap-1.5 text-slate-400 font-mono";
-        badge.innerHTML = `<i data-lucide="clock" class="w-4 h-4"></i> ${dict.upcomingText}`;
-      }
-
-      modal.classList.remove('hidden');
-      lucide.createIcons();
-    }
-
-    function closeNewsModal() {
-      document.getElementById('newsDetailModal').classList.add('hidden');
-    }
-
-    function rotateQuotes() {
-      const el = document.getElementById('quoteDisplay');
-      if (el) {
-        const dict = I18N[state.lang] || I18N.EN;
-        const quotesList = dict.quotes || MOTIVATIONAL_TIPS;
-        const randomQuote = quotesList[Math.floor(Math.random() * quotesList.length)];
-        el.textContent = `"${randomQuote}"`;
-      }
-    }
   </script>
-  
 </body>
 </html>
