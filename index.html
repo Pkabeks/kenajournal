@@ -212,13 +212,13 @@
           </div>
 
           <nav class="flex bg-slate-950/80 p-1 rounded-xl border border-slate-800 text-xs font-medium overflow-x-auto max-w-full">
+            <button id="navJournal" onclick="switchTab('journal')" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white transition flex items-center gap-1 shrink-0">
+              <i data-lucide="table" class="w-3.5 h-3.5"></i>
+              <span id="txtNavJournal">My Journal</span>
+            </button>
             <button id="navDashboard" onclick="switchTab('dashboard')" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white transition flex items-center gap-1 shrink-0">
               <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
               <span id="txtNavDashboard">Dashboard</span>
-            </button>
-            <button id="navJournal" onclick="switchTab('journal')" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white transition flex items-center gap-1 shrink-0">
-              <i data-lucide="table" class="w-3.5 h-3.5"></i>
-              <span id="txtNavJournal">My Sheet</span>
             </button>
             <button id="navAdmin" onclick="switchTab('admin')" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white transition flex items-center gap-1 shrink-0">
               <i data-lucide="shield-check" class="w-3.5 h-3.5 text-google-yellow"></i>
@@ -276,7 +276,7 @@
     </section>
 
     <!-- 1. DASHBOARD PAGE -->
-    <section id="viewDashboard" class="space-y-6">
+    <section id="viewDashboard" class="hidden space-y-6">
       
       <!-- Motivational Tip Banner + Active Week Animated Candlestick -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -688,7 +688,7 @@
     const DEFAULT_USERS = ["Dan", "Desty", "Fabrice", "Joseph", "Josue", "Tabala", "Pascal", "Pat"];
     const FIXED_RISK_PRESETS = [3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 60, 65, 70, 80];
 
-    // Updated with active September 2026 economic events
+    // Active September 2026 economic events
     const FOREX_NEWS_ITEMS = [
       {
         id: "ff-1",
@@ -773,7 +773,7 @@
     const I18N = {
       EN: {
         navDashboard: "Dashboard",
-        navJournal: "My Sheet",
+        navJournal: "My Journal",
         headerSubtitle: "Journal",
         activeChallenge: "September Challenge",
         guest: "Guest",
@@ -925,7 +925,7 @@
       lang: "EN",
       users: [],
       userPins: {},
-      currentUser: null, // Default set to null (no user logged in by default)
+      currentUser: null, // Default to null (no user logged in)
       isAdminAuthenticated: false,
       selectedMonth: "2026-09",
       sheets: {},
@@ -1000,7 +1000,9 @@
       applyLanguageUI();
       syncActiveWeekDisplay();
       setInterval(rotateQuotes, 12000);
-      switchTab('dashboard');
+      
+      // Land on 'journal' by default
+      switchTab('journal');
     });
 
     function rotateQuotes() {
@@ -1204,7 +1206,7 @@
       }
 
       if (state.currentUser === user) renderJournalTable();
-      renderDashboard();
+      if (state.currentUser) renderDashboard();
     }
 
     function updateJournalMonth(newMonth) {
@@ -1216,7 +1218,7 @@
       state.selectedMonth = "2026-09";
       saveState();
       renderJournalTable();
-      renderDashboard();
+      if (state.currentUser) renderDashboard();
     }
 
     function switchTab(tabName) {
@@ -1231,17 +1233,22 @@
         el.classList.add('text-slate-300');
       });
 
-      if (tabName === 'dashboard') {
-        document.getElementById('viewDashboard').classList.remove('hidden');
-        document.getElementById('navDashboard').classList.add('bg-ken-blue', 'text-white');
-        renderDashboard();
-      } else if (tabName === 'journal') {
+      if (tabName === 'journal') {
         if (!state.currentUser) {
           document.getElementById('viewLogin').classList.remove('hidden');
         } else {
           document.getElementById('viewJournal').classList.remove('hidden');
           document.getElementById('navJournal').classList.add('bg-ken-blue', 'text-white');
           renderJournalTable();
+        }
+      } else if (tabName === 'dashboard') {
+        if (!state.currentUser) {
+          // If no user is logged in, redirect to login page instead of displaying dashboard
+          document.getElementById('viewLogin').classList.remove('hidden');
+        } else {
+          document.getElementById('viewDashboard').classList.remove('hidden');
+          document.getElementById('navDashboard').classList.add('bg-ken-blue', 'text-white');
+          renderDashboard();
         }
       } else if (tabName === 'admin') {
         document.getElementById('viewAdmin').classList.remove('hidden');
@@ -1319,7 +1326,7 @@
     function logoutUser() {
       state.currentUser = null;
       saveState();
-      switchTab('dashboard');
+      switchTab('journal');
     }
 
     function renderJournalTable() {
@@ -1609,6 +1616,8 @@
     }
 
     function renderDashboard() {
+      if (!state.currentUser) return; // Do not render if no user logged in
+
       let grandTotalTrades = 0;
       let grandWins = 0;
       let grandLosses = 0;
@@ -1912,7 +1921,7 @@
         state.isAdminAuthenticated = true;
         saveState();
         switchTab('admin');
-        renderDashboard(); // Re-render dashboard to reveal admin stats
+        if (state.currentUser) renderDashboard();
       } else {
         alert('Invalid admin passcode. Try "admin123".');
       }
@@ -1922,7 +1931,7 @@
       state.isAdminAuthenticated = false;
       saveState();
       switchTab('admin');
-      renderDashboard(); // Hide admin stats
+      if (state.currentUser) renderDashboard();
     }
 
     function handleAddUser(e) {
