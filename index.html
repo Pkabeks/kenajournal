@@ -387,9 +387,9 @@
       </div>
 
       <!-- Visual Charts Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div id="chartsGridContainer" class="grid grid-cols-1 lg:grid-cols-1 gap-6">
         <!-- Cumulative Line Chart -->
-        <div class="lg:col-span-2 bg-slate-900 rounded-2xl p-5 border border-slate-800 shadow-md">
+        <div id="lineChartCard" class="bg-slate-900 rounded-2xl p-5 border border-slate-800 shadow-md">
           <div class="flex items-center justify-between mb-4">
             <h3 id="txtEquityCurveTitle" class="text-sm font-semibold text-slate-200 flex items-center gap-2">
               <i data-lucide="trending-up" class="w-4 h-4 text-ken-blue"></i>
@@ -402,8 +402,8 @@
           </div>
         </div>
 
-        <!-- Distribution Pie Chart -->
-        <div id="tradeVolumeCard" class="bg-slate-900 rounded-2xl p-5 border border-slate-800 shadow-md">
+        <!-- Distribution Pie Chart (Admin Only) -->
+        <div id="tradeVolumeCard" class="hidden bg-slate-900 rounded-2xl p-5 border border-slate-800 shadow-md">
           <div class="flex items-center justify-between mb-4">
             <h3 id="txtTradeBreakdownTitle" class="text-sm font-semibold text-slate-200 flex items-center gap-2">
               <i data-lucide="pie-chart" class="w-4 h-4 text-google-yellow"></i>
@@ -416,7 +416,7 @@
         </div>
 
         <!-- Wins vs Losses Bar Chart -->
-        <div class="lg:col-span-3 bg-slate-900 rounded-2xl p-5 border border-slate-800 shadow-md">
+        <div id="barChartCard" class="bg-slate-900 rounded-2xl p-5 border border-slate-800 shadow-md">
           <div class="flex items-center justify-between mb-4">
             <h3 id="txtWinsVsLossesTitle" class="text-sm font-semibold text-slate-200 flex items-center gap-2">
               <i data-lucide="bar-chart-2" class="w-4 h-4 text-emerald-400"></i>
@@ -685,7 +685,7 @@
 
   <!-- Core JavaScript Logic -->
   <script>
-    const DEFAULT_USERS = ["Dan", "Desty", "Fabrice", "Joseph", "Josue", "Tabala", "Pascal", "Pat"];
+    const DEFAULT_USERS = ["Drey", "Desty", "Fabrice", "Joseph", "Josue", "Seraphin", "Pascal", "Pascal", "Clement", "Isaac", "Peter", "Paulin", "Caleb"];
     const FIXED_RISK_PRESETS = [3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 60, 65, 70, 80];
 
     // Active September 2026 economic events
@@ -1206,7 +1206,7 @@
       }
 
       if (state.currentUser === user) renderJournalTable();
-      if (state.currentUser) renderDashboard();
+      if (state.currentUser || state.isAdminAuthenticated) renderDashboard();
     }
 
     function updateJournalMonth(newMonth) {
@@ -1218,7 +1218,7 @@
       state.selectedMonth = "2026-09";
       saveState();
       renderJournalTable();
-      if (state.currentUser) renderDashboard();
+      if (state.currentUser || state.isAdminAuthenticated) renderDashboard();
     }
 
     function switchTab(tabName) {
@@ -1242,8 +1242,8 @@
           renderJournalTable();
         }
       } else if (tabName === 'dashboard') {
-        if (!state.currentUser) {
-          // If no user is logged in, redirect to login page instead of displaying dashboard
+        if (!state.currentUser && !state.isAdminAuthenticated) {
+          // Redirect to login page if neither a participant nor Admin is logged in
           document.getElementById('viewLogin').classList.remove('hidden');
         } else {
           document.getElementById('viewDashboard').classList.remove('hidden');
@@ -1273,6 +1273,9 @@
       if (state.currentUser) {
         badge.classList.remove('hidden');
         label.textContent = state.currentUser;
+      } else if (state.isAdminAuthenticated) {
+        badge.classList.remove('hidden');
+        label.textContent = "Admin";
       } else {
         badge.classList.add('hidden');
         label.textContent = dict.guest;
@@ -1616,7 +1619,8 @@
     }
 
     function renderDashboard() {
-      if (!state.currentUser) return; // Do not render if no user logged in
+      // Allow render if a participant user OR Admin is logged in
+      if (!state.currentUser && !state.isAdminAuthenticated) return;
 
       let grandTotalTrades = 0;
       let grandWins = 0;
@@ -1666,8 +1670,9 @@
       const reportContent = document.getElementById('adminGrowthReportContent');
       const tradeVolumeCard = document.getElementById('tradeVolumeCard');
       const leaderboardSection = document.getElementById('leaderboardSection');
+      const chartsGridContainer = document.getElementById('chartsGridContainer');
 
-      // Admin-only visibility for summary cards, full growth report, trade volume breakdown, and rankings
+      // Admin-only visibility for summary cards, full growth report, and trade volume breakdown
       if (state.isAdminAuthenticated) {
         if (summaryCardsGrid) {
           summaryCardsGrid.classList.remove('hidden');
@@ -1676,6 +1681,11 @@
         if (reportSection) reportSection.classList.remove('hidden');
         if (tradeVolumeCard) tradeVolumeCard.classList.remove('hidden');
         if (leaderboardSection) leaderboardSection.classList.remove('hidden');
+
+        // Adjust chart grid layout for admin to show pie chart
+        if (chartsGridContainer) {
+          chartsGridContainer.className = "grid grid-cols-1 lg:grid-cols-3 gap-6";
+        }
 
         if (reportContent) {
           reportContent.innerHTML = '';
@@ -1697,13 +1707,19 @@
           });
         }
       } else {
+        // Standard user view: hide summary cards, admin growth report, and trade volume pie chart
         if (summaryCardsGrid) {
           summaryCardsGrid.classList.add('hidden');
           summaryCardsGrid.classList.remove('grid');
         }
         if (reportSection) reportSection.classList.add('hidden');
         if (tradeVolumeCard) tradeVolumeCard.classList.add('hidden');
-        if (leaderboardSection) leaderboardSection.classList.add('hidden');
+        if (leaderboardSection) leaderboardSection.classList.remove('hidden'); // Visible for standard users as requested
+
+        // Grid layout for standard user showing Equity Curve and Wins vs Losses
+        if (chartsGridContainer) {
+          chartsGridContainer.className = "grid grid-cols-1 lg:grid-cols-1 gap-6";
+        }
       }
 
       document.getElementById('statTotalTrades').textContent = grandTotalTrades;
@@ -1921,7 +1937,7 @@
         state.isAdminAuthenticated = true;
         saveState();
         switchTab('admin');
-        if (state.currentUser) renderDashboard();
+        renderDashboard();
       } else {
         alert('Invalid admin passcode. Try "admin123".');
       }
